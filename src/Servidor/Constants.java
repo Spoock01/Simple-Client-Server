@@ -10,11 +10,5 @@ public class Constants {
     public static final int CREATE_FILE = 3;
     public static int ID_C = 0;
     
-    public static int getSocket(){
-        return SOCKET_PORT;
-    }
-    
-    public static void updateSocket(){
-        SOCKET_PORT++;
-    }
+
 }

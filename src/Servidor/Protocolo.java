@@ -33,14 +33,17 @@ public class Protocolo implements Runnable{
         defineInputOutput();
         
         while(!end){
+            System.out.println("Waiting for request.");
             end = waitForRequest();
         }
-        System.out.println("CONNECTION CLOSED.");
+        System.out.println("+++++++++++++++++CONNECTION CLOSED.++++++++++++++++\n\n");
     }
     
     public void defineInputOutput(){
         try {
+            System.out.println("Creating input/output.");
             in = new DataInputStream (s.getInputStream());
+            System.out.println("In reference: " + in);
             out = new DataOutputStream (s.getOutputStream());
             
         } catch (IOException ex) {
@@ -49,10 +52,12 @@ public class Protocolo implements Runnable{
     }
     
     private boolean waitForRequest(){
-        int requestType = -1;
         try {
+            int requestType = 0;
             
-            requestType = Integer.parseInt(in.readUTF());
+            String leitor = in.readUTF();
+            System.out.println("O leitor eh: " + leitor);
+            requestType = Integer.parseInt(leitor);
             System.out.println("Request: {" + requestType + "}");
             
             switch(requestType){
@@ -73,15 +78,13 @@ public class Protocolo implements Runnable{
                     return false;
                 default:
                     System.out.println("Invalid option!");
-                    return true;     
+                    return true;
             }      
-            
-        } catch (SocketException se){
-                System.out.println("Connection lost.");
         } catch (IOException ex) {
-            System.out.println("RequestType must be an integer. " + ex.getMessage() + "\n" + ex.getLocalizedMessage());
-        }
-        return true;
+            Logger.getLogger(Protocolo.class.getName()).log(Level.SEVERE, null, ex);
+            return true;
+        } 
+            
 
     }
     
@@ -91,9 +94,11 @@ public class Protocolo implements Runnable{
         System.out.println(filename);
         
         File f = new File(filename);
-        BufferedReader file = new BufferedReader(new FileReader(filename)); 
         
         if(f.exists()){
+            
+             BufferedReader file = new BufferedReader(new FileReader(filename));
+            
             out.writeUTF("OK STATUS");
             String str;
             while(true){
@@ -147,7 +152,6 @@ public class Protocolo implements Runnable{
     }
 
     private void createFile() throws IOException {
-        out.writeUTF("Create File Function. Insert file name: ");
         
         String filename = in.readUTF(); 
         System.out.println("File: " + filename);

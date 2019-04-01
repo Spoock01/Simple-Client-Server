@@ -11,14 +11,13 @@ public class Servidor {
     
     public static void main(String[] args) {
         
-        
         ServerSocket servidor;
         Socket socket;
         ExecutorService EXECUTOR = Executors.newCachedThreadPool();
         
         
         try {
-            servidor = new ServerSocket(Constants.getSocket());
+            servidor = new ServerSocket(Constants.SOCKET_PORT);
             
             while(true){
                 socket = servidor.accept();

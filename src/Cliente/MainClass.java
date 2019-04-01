@@ -11,27 +11,23 @@ import java.util.logging.Logger;
  * @author Joao
  */
 public class MainClass {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         
         
         ExecutorService EXECUTOR = Executors.newCachedThreadPool();
-        
-        Cliente c[] = new Cliente[40];
-        
-        for (int i = 0; i < 40; i++){
-            c[i] = new Cliente(i);
-        }
+        int i = 0;
 
-        
-        for (int i = 0; i < 40; i++){
-            System.out.println("Cliente: "+ i);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            EXECUTOR.execute(c[i]);
+        while(true){
+            EXECUTOR.execute(new Cliente(i++));
             
+            Thread.sleep(200);
+            
+            if(i == 100){
+                break;
+            }
         }
+        
+        EXECUTOR.shutdown();
+        System.out.println("Ending main class.");
     }
 }

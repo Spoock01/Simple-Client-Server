@@ -12,12 +12,11 @@ import java.util.logging.Logger;
 
 public class Cliente implements Runnable{
     
-    private static Socket server = null;
-    private static DataInputStream in = null;
-    private static DataOutputStream out = null;
-    private static boolean endOfRequests = false;
+    private Socket server = null;
+    private DataInputStream in = null;
+    private DataOutputStream out = null;
+    private boolean endOfRequests = false;
     private int ID_CLIENTE;
-    private static final int SLEEP_TIME = 10000;
 
     public Cliente(int id) {
         this.ID_CLIENTE = id;
@@ -94,11 +93,12 @@ public class Cliente implements Runnable{
         
         try {
             //sending request to create a new file
+            System.out.println("Cliente #"+ this.ID_CLIENTE+ ": Sending Create File Request.");
             out.writeUTF("" + Constants.CREATE_FILE);
-            //waiting for server response - create file
-            System.out.println(in.readUTF());
-            //sending file name
-            out.writeUTF(Constants.CLIENTE + this.ID_CLIENTE + ".txt");
+
+            String filename = Constants.CLIENTE + this.ID_CLIENTE + ".txt";
+            System.out.println("Filename: " + filename);
+            out.writeUTF(filename);
             //waiting for server response - ok-error status
             System.out.println(in.readUTF());
      
@@ -108,10 +108,6 @@ public class Cliente implements Runnable{
             System.out.println("IOException {clientCreateFile}. " + ex.getMessage());
         }
  
-    }
-    
-    public void ggizi(){
-        
     }
     
     public void sendRequest(int requestType){      
@@ -145,8 +141,7 @@ public class Cliente implements Runnable{
     public void run() {
        
         try {
-            server = new Socket(Constants.IP, Constants.getSocket());
-//            Constants.updateSocket();
+            server = new Socket(Constants.IP, Constants.SOCKET_PORT);
             defineInputOutput();
         } catch (IOException ex) {
             System.out.println("Could not connect to server.");
@@ -155,10 +150,10 @@ public class Cliente implements Runnable{
         Random g = new Random();
         
         while(!endOfRequests){
-//            int number = 1 + g.nextInt(3);;
-//            
-//            System.out.println("Cliente ID #" + this.ID_CLIENTE + ": " + number);
-            sendRequest(Constants.CREATE_FILE);
+            int number = 1 + g.nextInt(3);;
+            
+            System.out.println("Cliente ID #" + this.ID_CLIENTE + ": " + number);
+            sendRequest(number);
             
             if(!endOfRequests)
                 sendRequest(Constants.END_OF_REQUEST);
